@@ -10,13 +10,22 @@ import (
 
 var ErrInvalidString = errors.New("invalid string")
 
-func Unpack(str string) (string, error) {
+func validateString(str string) error {
 	if !utf8.ValidString(str) {
-		return "", ErrInvalidString
+		return ErrInvalidString
 	}
 
 	if unicode.IsDigit([]rune(str)[:1][0]) {
-		return "", ErrInvalidString
+		return ErrInvalidString
+	}
+
+	return nil
+}
+
+func Unpack(str string) (string, error) {
+	err := validateString(str)
+	if err != nil {
+		return "", err
 	}
 
 	var sb strings.Builder
@@ -29,7 +38,10 @@ func Unpack(str string) (string, error) {
 		case unicode.IsDigit(v):
 			switch {
 			case replyRune != 0:
-				multiplier, _ := strconv.Atoi(string(v))
+				multiplier, err := strconv.Atoi(string(v))
+				if err != nil {
+					return "", err
+				}
 
 				if multiplier != 0 {
 					sb.WriteString(strings.Repeat(string(replyRune), multiplier))
@@ -42,14 +54,13 @@ func Unpack(str string) (string, error) {
 				return "", ErrInvalidString
 			}
 		case v == '\\':
-			if i == len(str)-1 && prevRune != '\\' {
+			switch {
+			case i == len(str)-1 && prevRune != '\\':
 				return "", ErrInvalidString
-			}
-
-			if replyRune != 0 {
+			case replyRune != 0:
 				sb.WriteRune(replyRune)
 				replyRune = 0
-			} else if prevRune == '\\' {
+			case prevRune == '\\':
 				replyRune = v
 			}
 		default:
