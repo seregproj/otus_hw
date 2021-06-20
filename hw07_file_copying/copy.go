@@ -62,6 +62,7 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	fi, err := f.Stat()
 	if err != nil {
@@ -76,6 +77,7 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	if err != nil {
 		return err
 	}
+	defer wF.Close()
 	mw := io.MultiWriter(wF, &progressWriter{limit: limit})
 
 	buf := make([]byte, 512)

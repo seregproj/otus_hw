@@ -28,8 +28,12 @@ func TestCopy(t *testing.T) {
 	})
 
 	t.Run("Empty file", func(t *testing.T) {
+		tmpFilename, err := os.CreateTemp("/tmp", "test.")
+		require.NoError(t, err)
+		defer os.Remove(tmpFilename.Name())
+
 		filename := "./testdata/empty.txt"
-		err := Copy(filename, "/tmp/test.txt", 0, 0)
+		err = Copy(filename, tmpFilename.Name(), 0, 0)
 		require.NoError(t, err)
 	})
 

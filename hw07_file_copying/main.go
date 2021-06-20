@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 )
 
 var (
@@ -23,6 +23,6 @@ func main() {
 	e := Copy(from, to, offset, limit)
 
 	if e != nil {
-		fmt.Println("Error:", e)
+		log.Fatal(e)
 	}
 }
