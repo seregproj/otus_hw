@@ -93,12 +93,12 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 			cnt = int(limit - doneCnt)
 		}
 
-		_, err = mw.Write(buf[:cnt])
+		amount, err := mw.Write(buf[:cnt])
 		if err != nil {
 			return err
 		}
 
-		doneCnt += int64(len(buf[:cnt]))
+		doneCnt += int64(amount)
 
 		if limit <= doneCnt {
 			break
