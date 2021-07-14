@@ -3,13 +3,17 @@ package exec
 //go:generate mockgen -destination=mock_test.go -package=exec_test . IExecClient,ICmd
 
 import (
+	"errors"
 	"fmt"
-	"github.com/seregproj/otus_hw/hw08_envdir_tool/reader"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/seregproj/otus_hw/hw08_envdir_tool/reader"
 )
+
+var ee *exec.ExitError
 
 type ICmd interface {
 	Run() error
@@ -90,11 +94,11 @@ func RunCmd(client IExecClient, cmd []string, env reader.Environment) (returnCod
 	command.SetStderr(os.Stderr)
 
 	if err := command.Run(); err != nil {
-		if exiterr, ok := err.(*exec.ExitError); ok {
-			return exiterr.ExitCode()
-		} else {
-			return 1
+		if errors.As(err, &ee) {
+			return ee.ExitCode()
 		}
+
+		return 1
 	}
 
 	return 0

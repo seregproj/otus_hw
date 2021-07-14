@@ -2,13 +2,14 @@ package exec_test
 
 import (
 	"errors"
+	"os"
+	osexec "os/exec"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/seregproj/otus_hw/hw08_envdir_tool/exec"
 	"github.com/seregproj/otus_hw/hw08_envdir_tool/reader"
 	"github.com/stretchr/testify/require"
-	"os"
-	osexec "os/exec"
-	"testing"
 )
 
 func TestRunCmdValid(t *testing.T) {

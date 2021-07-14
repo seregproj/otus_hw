@@ -1,13 +1,13 @@
 package reader
 
 import (
-	"github.com/stretchr/testify/require"
 	"path"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestReadDir(t *testing.T) {
-
 	t.Run("No such dir", func(t *testing.T) {
 		env, err := ReadDir("invalid_path")
 		require.Error(t, err)

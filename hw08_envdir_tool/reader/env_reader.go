@@ -9,9 +9,7 @@ import (
 	"unicode"
 )
 
-var (
-	ErrInvalidDirPath = errors.New("invalid dir path")
-)
+var ErrInvalidDirPath = errors.New("invalid dir path")
 
 type Environment map[string]EnvValue
 
